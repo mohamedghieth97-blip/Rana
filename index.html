@@ -145,6 +145,15 @@
     position: fixed;
     z-index: 9999;
   }
+  .btn-no.in-row {
+    position: relative;
+    z-index: auto;
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+  }
   .btn-no:hover { background: #e0f7fa; }
 
   .btn-choice {
@@ -272,11 +281,9 @@
 <button id="music-toggle" title="Toggle music" aria-label="Toggle music">🎵</button>
 
 <!-- Background audio — Vuelie / Frozen opening -->
-<audio id="bg-music" loop preload="none">
-  <!-- Primary: Internet Archive hosted Vuelie -->
-  <source src="https://ia800204.us.archive.org/13/items/FrozenSoundtrack/01%20Vuelie%20%28ft.%20Cantus%29.mp3" type="audio/mpeg" />
-  <!-- Fallback: free orchestral winter track -->
-  <source src="https://www.bensound.com/bensound-music/bensound-frozendream.mp3" type="audio/mpeg" />
+<audio id="bg-music" loop preload="auto">
+  <source src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0c6ff1bab.mp3" type="audio/mpeg" />
+  <source src="https://cdn.pixabay.com/download/audio/2021/11/13/audio_cb4f2b5357.mp3" type="audio/mpeg" />
 </audio>
 
 <!-- ═══ Main scene ════════════════════════════════════════ -->
@@ -289,15 +296,15 @@
     <!-- Olaf GIF -->
     <div class="olaf-wrap">
       <img id="olaf-img"
-        src="https://media1.tenor.com/m/pqBmFCRPFVAAAAAd/olaf-frozen.gif"
+        src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExY3NibDA3M2lxdmNwaDBlMGgxbXA0dXhycWJxZzhmN3VyM3N6YnV5MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kWV0Mt9QO9ua4/giphy.gif"
         alt="Olaf waving"
-        onerror="this.src='https://i.pinimg.com/originals/e1/74/c8/e174c8471a62f7c21c4bcfcf4e0bf960.gif'"
+        onerror="this.src='https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWZ0ejNmcXBtZWR3ZnE3amhyZWY0ZWJjdW5zNjZqbGZhMmlweDhmaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/FZiXDhzZJmHzq/giphy.gif'"
       />
     </div>
 
     <!-- Speech bubble -->
     <div class="bubble" id="bubble-text">
-      Hi Rana! I'm Olaf and I love warm hugs…<br/>
+      Hi Ranoon! I'm Olaf and I love warm hugs…<br/>
       Will you go on a date with me? ☃️❄️
     </div>
 
@@ -410,19 +417,30 @@ audio.volume = 0.45;
 function startMusic() {
   if (musicStarted) return;
   musicStarted = true;
-  audio.play().catch(() => {});
+  audio.play().catch(() => { musicStarted = false; });
 }
 
-// Trigger on first interaction
-['mousemove','mousedown','touchstart','keydown'].forEach(ev => {
-  document.addEventListener(ev, startMusic, { once: true, passive: true });
+// Start music on the very first user interaction (required by all browsers)
+function onFirstInteraction() {
+  startMusic();
+  ['click','mousemove','mousedown','touchstart','keydown','scroll'].forEach(ev => {
+    document.removeEventListener(ev, onFirstInteraction);
+  });
+}
+['click','mousemove','mousedown','touchstart','keydown','scroll'].forEach(ev => {
+  document.addEventListener(ev, onFirstInteraction, { passive: true });
 });
 
 document.getElementById('music-toggle').addEventListener('click', () => {
   musicOn = !musicOn;
-  if (musicOn) { audio.play(); document.getElementById('music-toggle').textContent = '🎵'; }
-  else          { audio.pause(); document.getElementById('music-toggle').textContent = '🔇'; }
-  startMusic();
+  if (musicOn) {
+    musicStarted = false;
+    startMusic();
+    document.getElementById('music-toggle').textContent = '🎵';
+  } else {
+    audio.pause();
+    document.getElementById('music-toggle').textContent = '🔇';
+  }
 });
 
 /* ══════════════════════════════════════════════
@@ -434,25 +452,36 @@ const yesBtn = document.getElementById('yes-btn');
 function teleportNo(e) {
   if (e && e.cancelable) e.preventDefault();
   startMusic();
-  const pad = 60;
-  const nx = pad + Math.random() * (window.innerWidth  - pad * 2);
-  const ny = pad + Math.random() * (window.innerHeight - pad * 2);
-  noBtn.style.left = nx + 'px';
-  noBtn.style.top  = ny + 'px';
-  noBtn.style.right = 'auto';
-  noBtn.style.bottom = 'auto';
+
+  const btnW = noBtn.offsetWidth  || 100;
+  const btnH = noBtn.offsetHeight || 44;
+  const margin = 16;
+
+  const nx = margin + Math.random() * (window.innerWidth  - btnW - margin * 2);
+  const ny = margin + Math.random() * (window.innerHeight - btnH - margin * 2);
+
+  noBtn.style.left      = Math.max(margin, Math.min(nx, window.innerWidth  - btnW - margin)) + 'px';
+  noBtn.style.top       = Math.max(margin, Math.min(ny, window.innerHeight - btnH - margin)) + 'px';
+  noBtn.style.right     = 'auto';
+  noBtn.style.bottom    = 'auto';
+  noBtn.style.transform = 'none';
 
   yesScale = Math.min(yesScale + 0.12, 2.6);
   yesBtn.style.transform = `scale(${yesScale})`;
 }
 
-// Initial position
-noBtn.style.left   = '50%';
-noBtn.style.top    = '50%';
-noBtn.style.transform = 'translate(-50%, -50%)';
+// Start the No button nicely beside Yes
+noBtn.classList.add('in-row');
 
-noBtn.addEventListener('mouseover',   teleportNo);
-noBtn.addEventListener('touchstart',  teleportNo, { passive: false });
+function firstEscape(e) {
+  noBtn.classList.remove('in-row');
+  teleportNo(e);
+}
+
+noBtn.addEventListener('mouseover',  firstEscape,  { once: true });
+noBtn.addEventListener('touchstart', firstEscape,  { once: true, passive: false });
+noBtn.addEventListener('mouseover',  teleportNo);
+noBtn.addEventListener('touchstart', teleportNo, { passive: false });
 
 /* ══════════════════════════════════════════════
    STEP 1 → 2  (Yes clicked)
@@ -468,7 +497,7 @@ function handleYes() {
 
   // Switch GIF
   document.getElementById('olaf-img').src =
-    'https://media1.tenor.com/m/pHMXCcsNAToAAAAd/frozen-olaf.gif';
+    'https://media.giphy.com/media/3oEjI5VtIhHvK37WYo/giphy.gif';
 
   // Update bubble
   document.getElementById('bubble-text').innerHTML =
@@ -531,7 +560,7 @@ function lockDate() {
 
   // Update GIF
   document.getElementById('olaf-img').src =
-    'https://media1.tenor.com/m/4RRsW_fAUAQAAAAd/olaf-happy.gif';
+    'https://media.giphy.com/media/26BRwW3ckGjcZmsxO/giphy.gif';
 
   document.getElementById('step4-btns').classList.add('hidden');
   document.getElementById('step-label').textContent = '🎉 It\'s a date!';
