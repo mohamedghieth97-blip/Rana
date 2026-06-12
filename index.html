@@ -460,17 +460,34 @@ function teleportNo(e) {
 
   const btnW = noBtn.offsetWidth  || 100;
   const btnH = noBtn.offsetHeight || 44;
+  
+  // Define how far the button is allowed to jump from its starting point
+  const maxMoveRange = 200; 
+
+  // Generates a small random shift (positive or negative) within the range
+  const randomX = (Math.random() - 0.5) * maxMoveRange;
+  const randomY = (Math.random() - 0.5) * maxMoveRange;
+
+  // Get the button's current position on the screen
+  const rect = noBtn.getBoundingClientRect();
+  
+  // Calculate new coordinates based on its current spot
+  let nx = rect.left + randomX;
+  let ny = rect.top + randomY;
+
+  // Safety boundaries to keep it from going off the browser screen edges
   const margin = 16;
+  nx = Math.max(margin, Math.min(nx, window.innerWidth - btnW - margin));
+  ny = Math.max(margin, Math.min(ny, window.innerHeight - btnH - margin));
 
-  const nx = margin + Math.random() * (window.innerWidth  - btnW - margin * 2);
-  const ny = margin + Math.random() * (window.innerHeight - btnH - margin * 2);
-
-  noBtn.style.left      = Math.max(margin, Math.min(nx, window.innerWidth  - btnW - margin)) + 'px';
-  noBtn.style.top       = Math.max(margin, Math.min(ny, window.innerHeight - btnH - margin)) + 'px';
+  // Apply the limited position changes
+  noBtn.style.left      = nx + 'px';
+  noBtn.style.top       = ny + 'px';
   noBtn.style.right     = 'auto';
   noBtn.style.bottom    = 'auto';
   noBtn.style.transform = 'none';
 
+  // Keep your original Yes button scaling logic exactly the same
   yesScale = Math.min(yesScale + 0.12, 2.6);
   yesBtn.style.transform = `scale(${yesScale})`;
 }
