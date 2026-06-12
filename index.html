@@ -456,9 +456,14 @@ const yesBtn = document.getElementById('yes-btn');
 
 function teleportNo(e) {
   if (e && e.cancelable) e.preventDefault();
-  startMusic(); // Keeps your background music starting on hover
+  startMusic();
 
-  // Your clean movement logic: Get screen dimensions minus padding
+  // If it's the very first time moving, remove the 'in-row' layout class safely
+  if (noBtn.classList.contains('in-row')) {
+    noBtn.classList.remove('in-row');
+  }
+
+  // Get screen dimensions minus button size padding
   const padding = 100;
   const x = Math.random() * (window.innerWidth - padding * 2) + padding;
   const y = Math.random() * (window.innerHeight - padding * 2) + padding;
@@ -471,7 +476,7 @@ function teleportNo(e) {
   noBtn.style.bottom    = 'auto';
   noBtn.style.transform = 'none';
 
-  // Keeps your original Yes button scaling logic working perfectly
+  // Make the Yes button grow larger
   yesScale = Math.min(yesScale + 0.12, 2.6);
   yesBtn.style.transform = `scale(${yesScale})`;
 }
@@ -479,13 +484,7 @@ function teleportNo(e) {
 // Start the No button nicely beside Yes
 noBtn.classList.add('in-row');
 
-function firstEscape(e) {
-  noBtn.classList.remove('in-row');
-  teleportNo(e);
-}
-
-noBtn.addEventListener('mouseover',  firstEscape,  { once: true });
-noBtn.addEventListener('touchstart', firstEscape,  { once: true, passive: false });
+// Clean event listeners: Only trigger the teleport once per interaction
 noBtn.addEventListener('mouseover',  teleportNo);
 noBtn.addEventListener('touchstart', teleportNo, { passive: false });
 
