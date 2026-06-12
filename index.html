@@ -62,6 +62,7 @@
             background-color: #ff4d6d;
             color: white;
             position: absolute;
+            z-index: 9999;
         }
         /* Date Picker Styling */
         #dateForm {
@@ -92,7 +93,7 @@
 </head>
 <body>
 
-    <!-- Background Music Player (Uses a cute copyright-free romantic track) -->
+    <!-- Background Music Player -->
     <audio id="bgMusic" loop>
         <source src="https://soundhelix.com" type="audio/mpeg">
     </audio>
@@ -117,6 +118,7 @@
         </div>
     </div>
 
+    <!-- Canvas for celebration confetti -->
     <script src="https://jsdelivr.net"></script>
 
     <script>
@@ -131,26 +133,37 @@
         
         let yesScale = 1;
 
-        // Try playing music immediately when they interact with the page
         function startMusic() {
-            bgMusic.play().catch(() => {
-                // Browsers block autoplay until user click, this catches that safely
-            });
+            bgMusic.play().catch(() => {});
         }
 
-        noBtn.addEventListener('mouseover', () => { moveButton(); startMusic(); });
-        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); startMusic(); });
+        // Triggers instantly on desktop hover
+        noBtn.addEventListener('mouseover', teleportButton);
+        
+        // Triggers instantly on mobile touch without zooming or opening links
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); 
+            teleportButton();
+        });
 
-        function moveButton() {
-            const padding = 100;
-            const x = Math.random() * (window.innerWidth - padding * 2) + padding;
-            const y = Math.random() * (window.innerHeight - padding * 2) + padding;
+        function teleportButton() {
+            startMusic();
+
+            // Calculate random coordinates across the whole browser screen viewport
+            const padding = 60; 
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
             
+            // Force the button out of layout restrictions using 'fixed'
             noBtn.style.position = 'fixed';
-            noBtn.style.left = `${x}px`;
-            noBtn.style.top = `${y}px`;
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
 
-            yesScale += 0.2;
+            // Make the YES button get bigger with each evade
+            yesScale += 0.25;
             yesBtn.style.transform = `scale(${yesScale})`;
         }
 
@@ -162,9 +175,9 @@
             
             noBtn.style.display = 'none';
             btnGroup.style.display = 'none';
-            dateForm.style.display = 'block'; // Show date picker
+            dateForm.style.display = 'block';
 
-            // Continuous Confetti Shower
+            // Confetti animation loops for 4 seconds
             var duration = 4 * 1000;
             var end = Date.now() + duration;
             (function frame() {
