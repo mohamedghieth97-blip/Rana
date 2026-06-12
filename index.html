@@ -458,25 +458,19 @@ function teleportNo(e) {
   if (e && e.cancelable) e.preventDefault();
   startMusic();
 
-  // If it's the very first time moving, remove the 'in-row' layout class safely
-  if (noBtn.classList.contains('in-row')) {
-    noBtn.classList.remove('in-row');
-  }
+  const btnW = noBtn.offsetWidth  || 100;
+  const btnH = noBtn.offsetHeight || 44;
+  const margin = 16;
 
-  // Get screen dimensions minus button size padding
-  const padding = 100;
-  const x = Math.random() * (window.innerWidth - padding * 2) + padding;
-  const y = Math.random() * (window.innerHeight - padding * 2) + padding;
-  
-  // Reposition button absolute to the whole viewport
-  noBtn.style.position = 'fixed';
-  noBtn.style.left = `${x}px`;
-  noBtn.style.top = `${y}px`;
+  const nx = margin + Math.random() * (window.innerWidth  - btnW - margin * 2);
+  const ny = margin + Math.random() * (window.innerHeight - btnH - margin * 2);
+
+  noBtn.style.left      = Math.max(margin, Math.min(nx, window.innerWidth  - btnW - margin)) + 'px';
+  noBtn.style.top       = Math.max(margin, Math.min(ny, window.innerHeight - btnH - margin)) + 'px';
   noBtn.style.right     = 'auto';
   noBtn.style.bottom    = 'auto';
   noBtn.style.transform = 'none';
 
-  // Make the Yes button grow larger
   yesScale = Math.min(yesScale + 0.12, 2.6);
   yesBtn.style.transform = `scale(${yesScale})`;
 }
@@ -484,7 +478,13 @@ function teleportNo(e) {
 // Start the No button nicely beside Yes
 noBtn.classList.add('in-row');
 
-// Clean event listeners: Only trigger the teleport once per interaction
+function firstEscape(e) {
+  noBtn.classList.remove('in-row');
+  teleportNo(e);
+}
+
+noBtn.addEventListener('mouseover',  firstEscape,  { once: true });
+noBtn.addEventListener('touchstart', firstEscape,  { once: true, passive: false });
 noBtn.addEventListener('mouseover',  teleportNo);
 noBtn.addEventListener('touchstart', teleportNo, { passive: false });
 
