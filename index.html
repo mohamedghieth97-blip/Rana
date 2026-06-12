@@ -296,7 +296,7 @@
   <div class="card" id="main-card">
 
     <div class="step-label" id="step-label">Step 1 of 4</div>
-    <div class="site-header">❄️ Olaf(Me😛) has a question ☃️</div>
+    <div class="site-header">❄️ Olaf(Me😛) is wondering ☃️</div>
 
     <!-- Olaf GIF -->
     <div class="olaf-wrap">
@@ -456,38 +456,22 @@ const yesBtn = document.getElementById('yes-btn');
 
 function teleportNo(e) {
   if (e && e.cancelable) e.preventDefault();
-  startMusic();
+  startMusic(); // Keeps your background music starting on hover
 
-  const btnW = noBtn.offsetWidth  || 100;
-  const btnH = noBtn.offsetHeight || 44;
+  // Your clean movement logic: Get screen dimensions minus padding
+  const padding = 100;
+  const x = Math.random() * (window.innerWidth - padding * 2) + padding;
+  const y = Math.random() * (window.innerHeight - padding * 2) + padding;
   
-  // Define how far the button is allowed to jump from its starting point
-  const maxMoveRange = 200; 
-
-  // Generates a small random shift (positive or negative) within the range
-  const randomX = (Math.random() - 0.5) * maxMoveRange;
-  const randomY = (Math.random() - 0.5) * maxMoveRange;
-
-  // Get the button's current position on the screen
-  const rect = noBtn.getBoundingClientRect();
-  
-  // Calculate new coordinates based on its current spot
-  let nx = rect.left + randomX;
-  let ny = rect.top + randomY;
-
-  // Safety boundaries to keep it from going off the browser screen edges
-  const margin = 16;
-  nx = Math.max(margin, Math.min(nx, window.innerWidth - btnW - margin));
-  ny = Math.max(margin, Math.min(ny, window.innerHeight - btnH - margin));
-
-  // Apply the limited position changes
-  noBtn.style.left      = nx + 'px';
-  noBtn.style.top       = ny + 'px';
+  // Reposition button absolute to the whole viewport
+  noBtn.style.position = 'fixed';
+  noBtn.style.left = `${x}px`;
+  noBtn.style.top = `${y}px`;
   noBtn.style.right     = 'auto';
   noBtn.style.bottom    = 'auto';
   noBtn.style.transform = 'none';
 
-  // Keep your original Yes button scaling logic exactly the same
+  // Keeps your original Yes button scaling logic working perfectly
   yesScale = Math.min(yesScale + 0.12, 2.6);
   yesBtn.style.transform = `scale(${yesScale})`;
 }
