@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hi Rana! Stitch has a question...</title>
+    <title>Hi Rana! Olaf has a question...</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e1f5fe; /* Stitch sky blue background */
+            background-color: #e0f7fa; /* Frozen soft ice blue background */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -21,15 +21,15 @@
             background-color: white;
             padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(2, 119, 189, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 151, 167, 0.2);
             max-width: 400px;
             width: 90%;
             position: relative;
             z-index: 10;
-            border: 3px solid #0288d1; /* Stitch darker blue accent border */
+            border: 3px solid #00acc1; /* Frozen cyan border */
         }
         h1 {
-            color: #01579b;
+            color: #006064;
             font-size: 24px;
             margin-bottom: 20px;
         }
@@ -57,11 +57,11 @@
             transition: transform 0.1s ease;
         }
         #yesBtn {
-            background-color: #29b6f6; /* Stitch bright blue */
+            background-color: #00bcd4; /* Olaf bright cyan */
             color: white;
         }
         #noBtn {
-            background-color: #ff5252; /* Soft red coral */
+            background-color: #ff5252; /* Coral red */
             color: white;
             position: absolute;
             z-index: 9999;
@@ -75,7 +75,7 @@
         input[type="datetime-local"] {
             padding: 10px;
             font-size: 16px;
-            border: 2px solid #29b6f6;
+            border: 2px solid #00bcd4;
             border-radius: 8px;
             margin-bottom: 15px;
             color: #333;
@@ -83,7 +83,7 @@
             width: 80%;
         }
         #submitDate {
-            background-color: #0288d1;
+            background-color: #00838f;
             color: white;
             font-size: 16px;
             padding: 10px 20px;
@@ -103,10 +103,10 @@
 
     <div class="container" id="questionBox">
         <div class="gif-container">
-            <!-- Stable Waving Stitch Image -->
-            <img id="displayGif" src="https://postimg.co" alt="Stitch Waving">
+            <!-- Guaranteed Stable Link: Olaf Waving and Introducing himself -->
+            <img id="displayGif" src="https://squarespace-cdn.com" alt="Olaf Waving">
         </div>
-        <h1 id="headline">Hi Rana! Will you go on a date with me? 🌺</h1>
+        <h1 id="headline">Hi Rana! I'm Olaf and I love warm hugs... Will you go on a date with me? ☃️❄️</h1>
         
         <div class="buttons" id="btnGroup">
             <button id="yesBtn">Yes!</button>
@@ -168,10 +168,10 @@
         // Action when YES clicked
         yesBtn.addEventListener('click', () => {
             startMusic();
-            headline.innerHTML = "Yay! Stitch is so happy! 🥰 Ohana means family!";
+            headline.innerHTML = "Yay! Some people are worth melting for! 🥰";
             
-            // Stable Excited Stitch Image
-            gif.src = "https://postimg.co";
+            // Guaranteed Stable Link: Olaf dancing excitedly
+            gif.src = "https://rawg.io";
             
             noBtn.style.display = 'none';
             btnGroup.style.display = 'none';
@@ -180,8 +180,8 @@
             var duration = 4 * 1000;
             var end = Date.now() + duration;
             (function frame() {
-                confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#29b6f6', '#0288d1', '#ffffff'] });
-                confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#29b6f6', '#0288d1', '#ffffff'] });
+                confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#00bcd4', '#b2ebf2', '#ffffff'] });
+                confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#00bcd4', '#b2ebf2', '#ffffff'] });
                 if (Date.now() < end) { requestAnimationFrame(frame); }
             }());
         });
@@ -194,11 +194,11 @@
                 return;
             }
             const chosenDate = new Date(dateValue).toLocaleString();
-            headline.innerHTML = `It's a date, Rana! See you on <br><strong>${chosenDate}</strong>! 🥂✨`;
+            headline.innerHTML = `It's a date, Rana! See you on <br><strong>${chosenDate}</strong>! 🥂❄️`;
             dateForm.style.display = 'none';
             
-            // Stable Stitch and Angel hugging Image
-            gif.src = "https://postimg.co";
+            // Final static sweet image of Olaf
+            gif.src = "https://squarespace-cdn.com";
         });
     </script>
 </body>
