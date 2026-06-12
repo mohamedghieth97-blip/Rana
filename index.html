@@ -103,8 +103,8 @@
 
     <div class="container" id="questionBox">
         <div class="gif-container">
-            <!-- Animated Stitch Waving Gif -->
-            <img id="displayGif" src="https://giphy.com" alt="Stitch Waving">
+            <!-- Stable Waving Stitch Image -->
+            <img id="displayGif" src="https://postimg.co" alt="Stitch Waving">
         </div>
         <h1 id="headline">Hi Rana! Will you go on a date with me? 🌺</h1>
         
@@ -141,10 +141,7 @@
             bgMusic.play().catch(() => {});
         }
 
-        // Triggers instantly on desktop hover
         noBtn.addEventListener('mouseover', teleportButton);
-        
-        // Triggers instantly on mobile touch without zooming or opening links
         noBtn.addEventListener('touchstart', (e) => {
             e.preventDefault(); 
             teleportButton();
@@ -153,7 +150,6 @@
         function teleportButton() {
             startMusic();
 
-            // Calculate random coordinates across the whole browser screen viewport
             const padding = 60; 
             const maxX = window.innerWidth - noBtn.offsetWidth - padding;
             const maxY = window.innerHeight - noBtn.offsetHeight - padding;
@@ -161,12 +157,10 @@
             const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
             const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
             
-            // Force the button out of layout restrictions using 'fixed'
             noBtn.style.position = 'fixed';
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
 
-            // Make the YES button get bigger with each evade
             yesScale += 0.25;
             yesBtn.style.transform = `scale(${yesScale})`;
         }
@@ -175,14 +169,14 @@
         yesBtn.addEventListener('click', () => {
             startMusic();
             headline.innerHTML = "Yay! Stitch is so happy! 🥰 Ohana means family!";
-            // Change to an excited Stitch gif
-            gif.src = "https://giphy.com";
+            
+            // Stable Excited Stitch Image
+            gif.src = "https://postimg.co";
             
             noBtn.style.display = 'none';
             btnGroup.style.display = 'none';
             dateForm.style.display = 'block';
 
-            // Confetti animation loops for 4 seconds
             var duration = 4 * 1000;
             var end = Date.now() + duration;
             (function frame() {
@@ -202,8 +196,9 @@
             const chosenDate = new Date(dateValue).toLocaleString();
             headline.innerHTML = `It's a date, Rana! See you on <br><strong>${chosenDate}</strong>! 🥂✨`;
             dateForm.style.display = 'none';
-            // Final sweet Stitch and Angel hugging gif
-            gif.src = "https://giphy.com";
+            
+            // Stable Stitch and Angel hugging Image
+            gif.src = "https://postimg.co";
         });
     </script>
 </body>
